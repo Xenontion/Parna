@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <h1>Product <%product.name%></h1>
+    </header>
+    <main>
+        <div class="product">
+            <img src="<%product.image%>" alt="<%product.name%>">
+            <div class="product_description">
+                <h2><%product.name%></h2>
+                <p><%product.description%></p>
+                <p>Price: <%product.price%></p>
+                <p>Quantity: <%product.quantity%></p>
+                <p>Category: <%product.category%></p>
+                <p>Rating: <%product.rating%></p>
+        </div>
+        <div class="product_manufacturer">
+            <a href=""><h2>Manufacturer</h2></a>
+            <p><%product.manufacturer.name%></p>
+            <p><%product.manufacturer.country%></p>
+            <p><%product.manufacturer.city%></p>
+            <p><%product.manufacturer.address%></p>
+        </div>
+    </main>
+    <footer>
+        <h2>Authors</h2>
+        <ul>
+            <li>Perepolkin Oleksandr</li>
+            <li>Sasko Oleg</li>
+        </ul>
+    </footer>
+</body>
+</html>
