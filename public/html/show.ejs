@@ -1,39 +1,251 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Товари виробника <%= manufacturer.name %></title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .manufacturer-info {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .manufacturer-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .manufacturer-logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 8px;
+            background: white;
+        }
+        .manufacturer-name {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .manufacturer-name:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .info-item h3 {
+            margin: 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        .info-item p {
+            margin: 0;
+            color: #666;
+        }
+        .info-item a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .info-item a:hover {
+            text-decoration: underline;
+        }
+        .description {
+            color: #666;
+            line-height: 1.6;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .product-card h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.2rem;
+            padding-right: 9rem;
+            transition: font-size 0.3s ease;
+        }
+        .product-card h3:hover {
+            font-size: 1.3rem;
+        }
+        .product-info {
+            margin: 0.5rem 0;
+            color: #666;
+            padding-right: 9rem;
+            font-size: 0.9rem;
+            transition: font-size 0.3s ease;
+        }
+        .product-info:hover {
+            font-size: 1.05rem;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 1rem;
+            opacity: 0.7;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            min-width: 50px;
+            z-index: 1;
+            transition: opacity 0.3s;
+            transform: translate(0, 0);
+        }
+        .delete-btn:hover {
+            opacity: 1;
+            background: #c82333;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Product <%product.name%></h1>
+        <img src="../icons/logo.svg" alt="Logo" class="header-logo">
+        <h1 style="margin-left: 15%">Товари виробника <%= manufacturer.name %></h1>
+        <nav>
+            <ul>
+                <li><a href="/">Інструкція</a></li>
+                <li><a href="/products">Список товарів</a></li>
+                <% if (userType === 'company') { %>
+                    <li><a href="/register">Реєстрація товару</a></li>
+                <% } %>
+                <li><a href="/logout">Вихід</a></li>
+            </ul>
+        </nav>
     </header>
+
     <main>
-        <div class="product">
-            <img src="<%product.image%>" alt="<%product.name%>">
-            <div class="product_description">
-                <h2><%product.name%></h2>
-                <p><%product.description%></p>
-                <p>Price: <%product.price%></p>
-                <p>Quantity: <%product.quantity%></p>
-                <p>Category: <%product.category%></p>
-                <p>Rating: <%product.rating%></p>
+        <div class="manufacturer-info">
+            <div class="manufacturer-header">
+                <img src="<%= manufacturer.logo %>" 
+                     alt="<%= manufacturer.name %>" 
+                     class="manufacturer-logo" 
+                     onerror="this.src='../images/default-logo.png'">
+                <a href="<%= manufacturer.link %>" 
+                   target="_blank" 
+                   class="manufacturer-name"><%= manufacturer.name %></a>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>Місцезнаходження</h3>
+                    <p><%= manufacturer.address %></p>
+                </div>
+                <div class="info-item">
+                    <h3>Номер телефону</h3>
+                    <p><%= manufacturer.number %></p>
+                </div>
+                <div class="info-item">
+                    <h3>Веб-сайт</h3>
+                    <p><a href="<%= manufacturer.link %>" target="_blank"><%= manufacturer.link %></a></p>
+                </div>
+                <div class="info-item">
+                    <h3>Email</h3>
+                    <p><a href="mailto:<%= manufacturer.email %>"><%= manufacturer.email %></a></p>
+                </div>
+            </div>
+
+            <div class="description">
+                <h2>Про виробника</h2>
+                <p><%= manufacturer.description %></p>
+            </div>
         </div>
-        <div class="product_manufacturer">
-            <a href=""><h2>Manufacturer</h2></a>
-            <p><%product.manufacturer.name%></p>
-            <p><%product.manufacturer.country%></p>
-            <p><%product.manufacturer.city%></p>
-            <p><%product.manufacturer.address%></p>
-        </div>
+
+        <section class="products">
+            <h2>Товари виробника</h2>
+            <div class="products-grid">
+                <% products.forEach(function(product) { %>
+                    <div class="product-card">
+                        <div class="product-content">
+                            <h3><%= product.name %></h3>
+                            <div class="product-info">Ціна: <%= product.price %> грн</div>
+                            <div class="product-info">Кількість: <%= product.quantity %></div>
+                            <div class="product-info">Категорія: <%= product.category %></div>
+                            <div class="product-info">Штрих-код: <%= product.bar_code %></div>
+                        </div>
+                        <% if (userType === 'company') { %>
+                            <button class="delete-btn" onclick="deleteProduct(<%= product.id %>)">Видалити</button>
+                        <% } %>
+                    </div>
+                <% }); %>
+            </div>
+        </section>
     </main>
+
     <footer>
-        <h2>Authors</h2>
-        <ul>
-            <li>Perepolkin Oleksandr</li>
-            <li>Sasko Oleg</li>
-        </ul>
+        <p> 2025, Chdtu dev prod. Всі права збережено. Всі дані взято із публічних джерел.</p>
+        <div class="footer-links">
+            <a href="/personnel">Персонал</a>
+            <a href="/license">Ліцензія</a>
+            <a href="https://madeinukraine.gov.ua/national-cashback"><img src="../icons/logo.svg" alt="Національний кешбек" class="footer-logo"></a>
+        </div>
     </footer>
+
+    <script>
+        async function deleteProduct(id) {
+            if (confirm('Ви впевнені, що хочете видалити цей товар?')) {
+                try {
+                    const response = await fetch(`/delete-product/${id}`, {
+                        method: 'DELETE'
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        location.reload();
+                    } else {
+                        alert('Помилка при видаленні товару');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Помилка при видаленні товару');
+                }
+            }
+        }
+    </script>
 </body>
 </html>

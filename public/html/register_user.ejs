@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реєстрація</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .register-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+        button {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 1rem;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .error-message {
+            color: #dc3545;
+            margin: 1rem 0;
+            padding: 0.75rem;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            display: none;
+        }
+        .success-message {
+            color: #155724;
+            margin: 1rem 0;
+            padding: 0.75rem;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            display: none;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #6c757d;
+        }
+        .login-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .form-header h2 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        .form-header p {
+            color: #6c757d;
+            margin: 0;
+        }
+        .company-fields {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="form-header">
+            <h2>Створити обліковий запис</h2>
+            <p>Заповніть форму для реєстрації</p>
+        </div>
+        
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="type">Тип облікового запису:</label>
+                <select id="type" name="type" required>
+                    <option value="">Оберіть тип облікового запису</option>
+                    <option value="user">Користувач</option>
+                    <option value="company">Компанія</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="login">Логін:</label>
+                <input type="text" id="login" name="login" required 
+                    placeholder="Введіть логін">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Електронна пошта:</label>
+                <input type="email" id="email" name="email" required 
+                    placeholder="Введіть електронну пошту">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" required 
+                    placeholder="Створіть пароль">
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Підтвердження паролю:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required 
+                    placeholder="Повторіть пароль">
+            </div>
+
+            <div id="companyFields" class="company-fields">
+                <div class="form-group">
+                    <label for="companyName">Назва компанії:</label>
+                    <input type="text" id="companyName" name="companyName" 
+                        placeholder="Введіть назву компанії">
+                </div>
+                <div class="form-group">
+                    <label for="companyAddress">Адреса компанії:</label>
+                    <input type="text" id="companyAddress" name="companyAddress" 
+                        placeholder="Введіть адресу компанії">
+                </div>
+                <div class="form-group">
+                    <label for="companyPhone">Телефон компанії:</label>
+                    <input type="tel" id="companyPhone" name="companyPhone" 
+                        placeholder="Введіть телефон компанії">
+                </div>
+            </div>
+
+            <button type="submit">Зареєструватися</button>
+        </form>
+
+        <div class="login-link">
+            Вже маєте обліковий запис? <a href="/login">Увійти</a>
+        </div>
+    </div>
+
+    <script>
+        // Показуємо/ховаємо поля для компанії залежно від вибору типу облікового запису
+        document.getElementById('type').addEventListener('change', function() {
+            const companyFields = document.getElementById('companyFields');
+            const companyInputs = companyFields.querySelectorAll('input');
+            
+            if (this.value === 'company') {
+                companyFields.style.display = 'block';
+                companyInputs.forEach(input => input.required = true);
+            } else {
+                companyFields.style.display = 'none';
+                companyInputs.forEach(input => input.required = false);
+            }
+        });
+
+        // Обробка форми реєстрації
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Валідація паролів
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showError('Паролі не співпадають');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError('Пароль повинен містити щонайменше 6 символів');
+                return;
+            }
+            
+            // Підготовка даних для відправки
+            const formData = {
+                type: document.getElementById('type').value,
+                login: document.getElementById('login').value,
+                email: document.getElementById('email').value,
+                password: password
+            };
+            
+            // Додавання даних компанії, якщо обрано тип "компанія"
+            if (formData.type === 'company') {
+                formData.companyName = document.getElementById('companyName').value;
+                formData.companyAddress = document.getElementById('companyAddress').value;
+                formData.companyPhone = document.getElementById('companyPhone').value;
+            }
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Помилка реєстрації');
+                }
+                
+                // Успішна реєстрація
+                showSuccess('Реєстрація успішна! Зараз ви будете перенаправлені на сторінку входу.');
+                document.getElementById('registerForm').reset();
+                
+                // Перенаправлення на сторінку входу через 3 секунди
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 3000);
+                
+            } catch (error) {
+                showError(error.message || 'Сталася помилка під час реєстрації');
+                console.error('Registration error:', error);
+            }
+        });
+        
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function showSuccess(message) {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Інструкція</title>
+    <link rel="stylesheet" href="css/instruction.css">
+</head>
+<body>
+    <header>
+        <img src="../icons/logo.svg" alt="Logo" class="header-logo">
+        <h1>Товари Національного Кешбеку</h1>
+        <nav>
+            <ul>
+                <li><a href="/products">Список продуктів</a></li>
+                <li><a href="/register">Реєстрація товару</a></li>
+                <li><a href="/register_user">Реєстрація</a></li>
+                <% if (userType) { %>
+                    <li><a href="/logout">Вийти</a></li>
+                <% } else { %>
+                    <li><a href="/login">Логін</a></li>
+                <% } %>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Інструкція:</h2>
+        <ul>
+            <li>
+                <p>Для перегляду інформації про компанію, наведіться мишкою на рядок з товаром, інормація про виробника якого вас цікавить, та <b>натисніть на збільшений рядок.</b></p>
+                <img src="../icons/tutorial_3.png" alt="Enlarge" class="instruction-icon">
+            </li>
+            <li>
+                <p>Щоб перейти на сторінку виробника натисніть на <b>назву компанії</b> на сайті з інформацією про компанію.</p>
+                <img src="../icons/tutorial_2.png" alt="Company Page" class="instruction-icon">
+            </li>
+            <li>
+                <p>Для повернення до списку продуктів, натисніть кнопку <b>"Назад"</b>.</p>
+                <img src="../icons/tutorial_1.png" alt="Back Button" class="instruction-icon">
+            </li>
+            <li>
+                <p>Для перегляду інформації про авторів, <b>прокрутіть сторінку вниз.</b></p>
+                <img src="../icons/tutorial_5.png" alt="Authors Info" class="instruction-icon">
+            </li>
+            <li>
+                <p>Щоб видалити продукт <b>натисніть кнопку видалити в таблиці. УВАГА НЕ НАТИСКАЙТЕ ВИДАЛИТИ, ЯКЩО НЕ ХОЧЕТЕ ВИДАЛЕННЯ ТОВАРУ</b></p>
+                <img src="../icons/tutorial_6.png" alt="Delete Button" class="instruction-icon">
+            </li>
+            <li>
+                <p>
+                    Для реєстрації нового товару, перейдіть на сторінку <b>"Реєстрація товару"</b> та заповніть всі поля форми.
+                </p>
+                <img src="../icons/tutorial_7.png" alt="Registration Form" class="instruction-icon">
+            </li>
+            <li>
+                <p>
+                    Для зміни зовнішнього вигляду сайту з продуктами з таблиці на слайдер, <b>натисність на зображення слайдеру біля фільтру. Та навпаки на картинку таблиці при виді слайдеру.</b>                
+                </p>
+                <img src="../icons/tutorial_8.png" alt="View Toggle" class="instruction-icon">
+                <img src="../icons/tutorial_9.png" alt="View Toggle" class="instruction-icon">
+            </li>
+            <li>
+                <p>
+                    Для переходу на сторінку з продуктами, <b>натисніть "Список продуктів"</b>
+                </p>
+                <img src="../icons/tutorial_10.png" alt="Products List" class="instruction-icon">
+            </li>
+            <li>
+                <p>
+                    Для фільтрації продуктів за назвою, масою, ціною, категорією <b>натисніть на заголовок колонки.</b>      
+                </p>
+                <img src="../icons/tutorial_11.png" alt="Filter" class="instruction-icon">
+            </li>
+        </ul>
+        <button onclick="redirectToProducts()">Перейти до списку продуктів</button>
+        <% if (userType === 'company') { %>
+            <button onclick="redirectToRegistration()">Зареєструвати товар</button>
+        <% } %>
+    </main>
+    <footer>
+        <p> 2025, Chdtu dev prod. Всі права збережено. Всі дані взято із публічних джерел.</p>
+        <div class="footer-links">
+            <a href="/personnel">Персонал</a>
+            <a href="/license">Ліцензія</a>
+            <a href="https://madeinukraine.gov.ua/national-cashback"><img src="../icons/logo.svg" alt="Національний кешбек" class="footer-logo"></a>
+        </div>
+    </footer>
+    <script>
+        function redirectToProducts() {
+            window.location.href = '/products';
+        }
+        
+        async function redirectToRegistration() {
+            try {
+                // Make a request to check if we have access
+                const response = await fetch('/register', {
+                    method: 'HEAD' // Using HEAD to avoid full response
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/register';
+                } else {
+                    // If we get a redirect or any other error
+                    alert('Ви не маєте прав для доступу до цієї сторінки. Ця функція доступна тільки для представників компаній.');
+                }
+            } catch (error) {
+                alert('Сталася помилка при спробі доступу до сторінки реєстрації.');
+            }
+        }
+    </script>
+</body>
+</html>

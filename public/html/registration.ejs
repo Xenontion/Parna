@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реєстрація товару</title>
+    <link rel="stylesheet" href="/css/registration.css">
+</head>
+<body>
+    <header>
+        <img src="../icons/logo.svg" alt="Logo" class="header-logo">
+        <h1>Реєстрація товару</h1>
+        <ul>
+            <li><a href="/products">Список продуктів</a></li>
+            <li><a href="/">Інструкція</a></li>
+        </ul>
+    </header>
+    <main>
+        <form action="/register-product" method="POST">
+            <div>
+                <label for="name">Назва продукту:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div>
+                <label for="price">Ціна:</label>
+                <input type="text" id="price" name="price" required>
+            </div>
+            <div>
+                <label for="quantity">Кількість:</label>
+                <div class="quantity-container">
+                    <input type="text" id="quantity" name="quantity" required>
+                    <select id="unit" name="unit" required>
+                        <option value="">Оберіть одиницю</option>
+                        <option value="г">г</option>
+                        <option value="л">л</option>
+                        <option value="шт">шт</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label for="category">Категорія:</label>
+                <select id="category" name="category" required>
+                    <option value="">Оберіть категорію</option>
+                    <% if (locals.categories && Array.isArray(locals.categories) && locals.categories.length > 0) {
+                        locals.categories.forEach(function(category) { %>
+                            <option value="<%= category.name %>"><%= category.name %></option>
+                        <% });
+                    } %>
+                </select>
+            </div>
+            <div>
+                <label for="bar_code">Штрих код товару:</label>
+                <input type="number" id="bar_code" name="bar_code" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+            <div>
+                <label for="manufacturer">Виробник:</label>
+                <input type="text" id="manufacturer" name="manufacturer" required>
+            </div>
+            <div>
+                <label for="images">Зображення (URL):</label>
+                <input type="text" id="images" name="images" required>
+            </div>
+            <button type="submit">Зареєструвати товар</button>
+        </form>
+    </main>
+    <footer>
+        <p> 2025, Chdtu dev prod. Всі права збережено. Всі дані взято із публічних джерел.</p>
+        <div class="footer-links">
+            <a href="/personnel">Персонал</a>
+            <a href="/license">Ліцензія</a>
+            <a href="https://madeinukraine.gov.ua/national-cashback"><img src="../icons/logo.svg" alt="Національний кешбек" class="footer-logo"></a>
+        </div>
+    </footer>
+    <script>
+        // Додаткова валідація для поля штрих-коду
+        document.getElementById('bar_code').addEventListener('input', function(e) {
+            const value = e.target.value;
+            if (!/^[0-9]*$/.test(value)) {
+                e.target.value = value.replace(/[^0-9]/g, '');
+                alert('Штрих-код може містити тільки цифри!');
+            }
+        });
+
+        // Валідація для поля ціни
+        document.getElementById('price').addEventListener('input', function(e) {
+            const value = e.target.value;
+            if (!/^[0-9]*$/.test(value)) {
+                e.target.value = value.replace(/[^0-9]/g, '');
+                alert('Ціна може містити тільки цифри!');
+            }
+        });
+
+        // Валідація для поля кількості
+        document.getElementById('quantity').addEventListener('input', function(e) {
+            const value = e.target.value;
+            if (!/^[0-9]*$/.test(value)) {
+                e.target.value = value.replace(/[^0-9]/g, '');
+                alert('Кількість може містити тільки цифри!');
+            }
+        });
+    </script>
+</body>
+</html>

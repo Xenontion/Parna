@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Персонал</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <img src="../icons/logo.svg" alt="Logo" class="header-logo">
+        <h1 style="margin-left: 200px;">Персонал</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Інструкція</a></li>
+                <li><a href="/register">Реєстрація</a></li>
+                <% if (userType) { %>
+                    <li><a href="/logout">Вийти</a></li>
+                <% } else { %>
+                    <li><a href="/login">Логін</a></li>
+                <% } %>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="personnel-container">
+            <div class="personnel-card">
+                <div class="personnel-info">
+                    <h3>Керівництво</h3>
+                    <div class="personnel-item">
+                        <h4>Викладач</h4>
+                        <p>Металап Володимир Володимирович</p>
+                        <p>volodymyr@gmail.com</p>
+                        <p>+380 93 163 5886</p>
+                    </div>
+                </div>
+            </div>
+            <div class="personnel-card">
+                <div class="personnel-info">
+                    <h3>Розробники</h3>
+                    <div class="personnel-item">
+                        <h4>Розробник/студент</h4>
+                        <p>Сасько Олег Ігорович</p>
+                        <p>olehsasko@gmail.com</p>
+                        <p>+380 68 994 2055</p>
+                    </div>
+                    <div class="personnel-item">
+                        <h4>Розробник/студент</h4>
+                        <p>Перепьолкін Олександр Олександрович</p>
+                        <p>oleksandr@gmail.com</p>
+                        <p>+380 93 163 5886</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p> 2025, Chdtu dev prod. Всі права збережено. Всі дані взято із публічних джерел.</p>
+        <div class="footer-links">
+            <a href="/personnel">Персонал</a>
+            <a href="/license">Ліцензія</a>
+            <a href="https://madeinukraine.gov.ua/national-cashback"><img src="../icons/logo.svg" alt="Національний кешбек" class="footer-logo"></a>
+        </div>
+    </footer>
+</body>
+</html>
