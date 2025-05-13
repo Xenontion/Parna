@@ -7,13 +7,6 @@ const pool = require("./db");
 
 const app = express();
 
-const pool = new Pool({
-  user: "postgres", 
-  host: "localhost",
-  database: "National cashback", 
-  password: "postgres", 
-});
-
 app.set("views", path.join(__dirname, "/public/html"));
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
