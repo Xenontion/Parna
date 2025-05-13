@@ -3,6 +3,7 @@ const { Pool } = require("pg");
 const path = require("path");
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const pool = require("./db");
 
 const app = express();
 
