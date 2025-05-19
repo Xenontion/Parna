@@ -322,8 +322,7 @@ app.get("/manufacturer/:name", checkAuth, async (req, res) => {
 
 app.get("/api/companies", async (req, res) => {
   try {
-    // Якщо у вас таблиця називається інакше (наприклад, companies), змініть назву нижче
-    const result = await pool.query("SELECT * FROM manufacturies ORDER BY name");
+    const result = await pool.query("SELECT * FROM manufacturies");
     res.json(result.rows);
   } catch (err) {
     console.error("Error fetching companies:", err);
