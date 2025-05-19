@@ -7,10 +7,8 @@ const session = require("express-session");
 const app = express();
 
 const pool = new Pool({
-  user: "admin", 
-  host: "dpg-d0hhhqruibrs739oijn0-a.oregon-postgres.render.com",
-  database: "National cashback", 
-  password: "XnohULRYsFWBaw5YuF5RGePitZMDsmb2", 
+  connectionString: process.env.postgres || "postgres://admin:XnohULRYsFWBaw5YuF5RGePitZMDsmb2@dpg-d0hhhqruibrs739oijn0-a.oregon-postgres.render.com/National%20cashback",
+  ssl: { rejectUnauthorized: false }
 });
 
 app.set("views", path.join(__dirname, "/public/html"));
