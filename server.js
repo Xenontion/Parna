@@ -7,10 +7,10 @@ const session = require("express-session");
 const app = express();
 
 const pool = new Pool({
-  user: "postgres", 
-  host: "localhost",
+  user: "admin", 
+  host: "dpg-d0hhhqruibrs739oijn0-a.oregon-postgres.render.com",
   database: "National cashback", 
-  password: "postgres", 
+  password: "XnohULRYsFWBaw5YuF5RGePitZMDsmb2", 
 });
 
 app.set("views", path.join(__dirname, "/public/html"));
