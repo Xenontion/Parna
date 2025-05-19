@@ -320,6 +320,17 @@ app.get("/manufacturer/:name", checkAuth, async (req, res) => {
   }
 });
 
+app.get("/api/companies", async (req, res) => {
+  try {
+    // Якщо у вас таблиця називається інакше (наприклад, companies), змініть назву нижче
+    const result = await pool.query("SELECT * FROM manufacturies ORDER BY name");
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error fetching companies:", err);
+    res.status(500).json({ error: "Помилка отримання компаній" });
+  }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
