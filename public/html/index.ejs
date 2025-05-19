@@ -52,15 +52,15 @@
                     <tr class="product-row" data-name="<%= product.name.toLowerCase() %>">
                         <td><img src="<%= product.images %>" alt="<%= product.name %>" class="product-image"></td>
                         <td data-name="<%= product.name %>">
-                            <a href="<%= product.manufacturer %>" class="product-name-link">
+                            <a href="/manufacturer/<%= product.manufacturer %>" class="product-name-link">
                                 <%= product.name %>
                             </a>
                         </td>
                         <td data-price="<%= product.price %>"><%= product.price %> грн</td>
                         <td data-quantity="<%= product.quantity %>"><%= product.quantity %></td>
                         <td data-category="<%= product.category %>"><%= product.category %></td>
-                        <td data-manufacturer="<%= product.manufacturer %>">
-                            <a href="<%= product.manufacturer %>" class="manufacturer-link">
+                        <td data-manufacturer="/manufacturer/<%= product.manufacturer %>">
+                            <a href="/manufacturer/<%= product.manufacturer %>" class="manufacturer-link">
                                 <%= product.manufacturer %>
                             </a>
                         </td>

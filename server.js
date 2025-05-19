@@ -3,9 +3,15 @@ const { Pool } = require("pg");
 const path = require("path");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const pool = require("./db");
 
 const app = express();
+
+const pool = new Pool({
+  user: "postgres", 
+  host: "localhost",
+  database: "National cashback", 
+  password: "postgres", 
+});
 
 app.set("views", path.join(__dirname, "/public/html"));
 app.set("view engine", "ejs");
@@ -105,6 +111,7 @@ app.post('/api/register_user', async (req, res) => {
       );
 
       if (userCheck.rows.length > 0) {
+          // ВАЖЛИВО: завжди повертаємо JSON!
           return res.status(400).json({ message: 'Користувач з таким логіном або поштою вже існує' });
       }
 
@@ -121,6 +128,7 @@ app.post('/api/register_user', async (req, res) => {
 
   } catch (error) {
       console.error('Registration error:', error);
+      // ВАЖЛИВО: завжди повертаємо JSON!
       res.status(500).json({ message: 'Помилка сервера при реєстрації' });
   }
 });
@@ -283,10 +291,10 @@ app.get("/test-categories", async (req, res) => {
 });
 
 // Сторінка для відображення конкретного виробника та його товарів
-app.get("/:manufacturer/:name", checkAuth, async (req, res) => {
+app.get("/manufacturer/:name", checkAuth, async (req, res) => {
   try {
-    const manufacturerName = req.params.manufacturer;
-    
+    const manufacturerName = req.params.name;
+
     // Отримуємо інформацію про виробника
     const manufacturerResult = await pool.query(
       "SELECT * FROM manufacturies WHERE name = $1",
@@ -306,7 +314,7 @@ app.get("/:manufacturer/:name", checkAuth, async (req, res) => {
     res.render("show", { 
       manufacturer: manufacturerResult.rows[0],
       products: productsResult.rows,
-      userType: req.session.user.type
+      userType: req.session.user ? req.session.user.type : null
     });
   } catch (err) {
     console.error(err);
