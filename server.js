@@ -334,3 +334,12 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+app.get("api/register/product", checkAuth, async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM products");
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "Помилка отримання товарів" });
+  }
+});
