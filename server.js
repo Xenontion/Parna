@@ -392,11 +392,6 @@ app.get("/api/company/:name", async (req, res) => {
   }
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
 app.get("/api/products/:id", async (req, res) => {
   try {
     const productId = parseInt(req.params.id, 10);
@@ -495,4 +490,9 @@ app.post("/api/delete_product", async (req, res) => {
     console.error("Error deleting product:", err);
     res.status(500).json({ error: "Помилка при видаленні товару" });
   }
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
