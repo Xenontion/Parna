@@ -313,7 +313,7 @@ app.delete(
 );
 
 // API для отримання всіх продуктів у форматі JSON
-app.get("/api/products", async (req, res) => {
+app.get("/api/products", checkAuth, async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM products");
     res.json(result.rows);
