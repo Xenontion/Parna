@@ -375,6 +375,23 @@ app.get("/api/companies", async (req, res) => {
   }
 });
 
+app.get("/api/company/:name", async (req, res) => {
+  try {
+    const name = req.params.name;
+    const result = await pool.query(
+      "SELECT * FROM manufacturies WHERE name = $1",
+      [name]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Компанію не знайдено" });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("Error fetching company:", err);
+    res.status(500).json({ error: "Помилка отримання компанії" });
+  }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
@@ -477,21 +494,5 @@ app.post("/api/delete_product", async (req, res) => {
   } catch (err) {
     console.error("Error deleting product:", err);
     res.status(500).json({ error: "Помилка при видаленні товару" });
-  }
-});
-
-app.get("/api/company/:name", async (req, res) => {
-  try {
-    const name = req.params.name;
-    const result = await pool.query(
-      "SELECT * FROM manufacturies WHERE name = 'mova'"
-    );
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Компанію не знайдено" });
-    }
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error("Error fetching company:", err);
-    res.status(500).json({ error: "Помилка отримання компанії" });
   }
 });
