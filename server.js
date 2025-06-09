@@ -2,6 +2,7 @@ const express = require("express");
 const { Pool } = require("pg");
 const path = require("path");
 const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt");
 const session = require("express-session");
 
 const app = express();
@@ -141,7 +142,6 @@ app.post("/register_user", async (req, res) => {
   }
 });
 
-// API endpoint for user registration
 app.post("/api/register_company", async (req, res) => {
   try {
     const {
@@ -154,27 +154,26 @@ app.post("/api/register_company", async (req, res) => {
       companyPhone,
     } = req.body;
 
-    // Check if user already exists
     const userCheck = await pool.query(
       "SELECT * FROM users WHERE login = $1 OR email = $2",
       [login, email]
     );
 
     if (userCheck.rows.length > 0) {
-      // ВАЖЛИВО: завжди повертаємо JSON!
       return res
         .status(400)
         .json({ message: "Користувач з таким логіном або поштою вже існує" });
     }
 
-    // Insert new user into database
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const result = await pool.query(
       "INSERT INTO users (type, login, email, password, company_name, company_address, company_phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
       [
         type,
         login,
         email,
-        password,
+        hashedPassword,
         companyName || null,
         companyAddress || null,
         companyPhone || null,
@@ -187,7 +186,6 @@ app.post("/api/register_company", async (req, res) => {
     });
   } catch (error) {
     console.error("Registration error:", error);
-    // ВАЖЛИВО: завжди повертаємо JSON!
     res.status(500).json({ message: "Помилка сервера при реєстрації" });
   }
 });
