@@ -116,33 +116,28 @@ app.get("/login", (req, res) => {
 // Route for registration page
 app.post("/register_user", async (req, res) => {
   try {
-    const { type, login, email, password } = req.body;
+    const { name, email, password, type } = req.body;
 
-    const userCheck = await pool.query(
-      "SELECT * FROM users WHERE login = $1 OR email = $2",
-      [login, email]
-    );
-
-    if (userCheck.rows.length > 0) {
-      // ВАЖЛИВО: завжди повертаємо JSON!
+    // Basic validation
+    if (!name || !email || !password || !type) {
       return res
         .status(400)
-        .json({ message: "Користувач з таким логіном або поштою вже існує" });
+        .json({ success: false, message: "Missing fields" });
     }
 
-    // Insert new user into database
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const result = await pool.query(
-      "INSERT INTO users (type, login, email, password, company_name, company_address, company_phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
-      [type, login, email, password]
+      `INSERT INTO users (name, email, password, type)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [name, email, hashedPassword, type]
     );
 
-    res.status(201).json({
-      message: "Користувача успішно зареєстровано",
-      userId: result.rows[0].id,
-    });
-  } catch (error) {
-    console.error("Error rendering registration page:", error);
-    res.status(500).send("Помилка при завантаженні сторінки реєстрації");
+    res.status(200).json({ success: true, user: result.rows[0] });
+  } catch (err) {
+    console.error("Registration error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
