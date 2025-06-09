@@ -116,10 +116,10 @@ app.get("/login", (req, res) => {
 // Route for registration page
 app.post("/register_user", async (req, res) => {
   try {
-    const { name, email, password, type } = req.body;
+    const { login, email, password, type } = req.body;
 
     // Basic validation
-    if (!name || !email || !password || !type) {
+    if (!login || !email || !password || !type) {
       return res
         .status(400)
         .json({ success: false, message: "Missing fields" });
@@ -131,7 +131,7 @@ app.post("/register_user", async (req, res) => {
       `INSERT INTO users (name, email, password, type)
        VALUES ($1, $2, $3, $4)
        RETURNING *`,
-      [name, email, hashedPassword, type]
+      [login, email, hashedPassword, type]
     );
 
     res.status(200).json({ success: true, user: result.rows[0] });
