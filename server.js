@@ -440,6 +440,32 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+app.post("/api/register_user", async (req, res) => {
+  try {
+    const { login, email, password, type } = req.body;
+
+    // Basic validation
+    if (!login || !email || !password || !type) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing fields" });
+    }
+
+    // Since we're storing plain text for now (per your earlier decision)
+    const result = await pool.query(
+      `INSERT INTO users (login, email, password, type)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [login, email, password, type]
+    );
+
+    res.status(200).json({ success: true, user: result.rows[0] });
+  } catch (err) {
+    console.error("Registration error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 app.post("/api/register_product", async (req, res) => {
   const {
     name,
