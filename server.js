@@ -308,6 +308,50 @@ app.get("/register", checkCompanyAuth, async (req, res) => {
   }
 });
 
+app.post("/api/register/product", async (req, res) => {
+  try {
+    const {
+      id,
+      name,
+      price,
+      quantity,
+      category,
+      bar_code,
+      manufacturer,
+      images,
+    } = req.body;
+
+    // Basic validation
+    if (!name || !price || !quantity || !category || !bar_code || !images) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const result = await pool.query(
+      "INSERT INTO products (id, name, price, quantity, category, bar_code, manufacturer, images) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
+      [
+        id || null,
+        name,
+        price,
+        quantity,
+        category,
+        bar_code,
+        manufacturer || null,
+        images,
+      ]
+    );
+
+    res.status(201).json({
+      message: "Product successfully registered",
+      productId: result.rows[0].id,
+    });
+  } catch (error) {
+    console.error("Product registration error:", error);
+    res
+      .status(500)
+      .json({ message: "Server error during product registration" });
+  }
+});
+
 // Обробка форми реєстрації товару
 app.post("/register-product", checkCompanyAuth, async (req, res) => {
   const { name, price, quantity, category, bar_code, manufacturer, images } =
