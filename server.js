@@ -494,8 +494,8 @@ app.post("/api/delete_product", async (req, res) => {
 
 app.get("/api/categories", async (req, res) => {
   try {
-    const res = await pool.query("SELECT * from categories");
-    res.json(res.rows);
+    const result = await pool.query("SELECT * from categories");
+    res.json(result.rows);
   } catch (err) {
     res.status(500).json({ error: "Помилка отримання категорій" });
   }
