@@ -2,7 +2,6 @@ const express = require("express");
 const { Pool } = require("pg");
 const path = require("path");
 const bodyParser = require("body-parser");
-const bcrypt = require("bcrypt");
 const session = require("express-session");
 
 const app = express();
@@ -114,25 +113,21 @@ app.get("/login", (req, res) => {
   res.render("users");
 });
 
-// Route for registration page
 app.post("/register_user", async (req, res) => {
   try {
     const { login, email, password, type } = req.body;
 
-    // Basic validation
     if (!login || !email || !password || !type) {
       return res
         .status(400)
         .json({ success: false, message: "Missing fields" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const result = await pool.query(
       `INSERT INTO users (login, email, password, type)
        VALUES ($1, $2, $3, $4)
        RETURNING *`,
-      [login, email, hashedPassword, type]
+      [login, email, password, type] // Removed bcrypt.hash
     );
 
     res.status(200).json({ success: true, user: result.rows[0] });
@@ -165,19 +160,17 @@ app.post("/api/register_company", async (req, res) => {
         .json({ message: "Користувач з таким логіном або поштою вже існує" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const result = await pool.query(
       "INSERT INTO users (type, login, email, password, company_name, company_address, company_phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
       [
         type,
         login,
         email,
-        hashedPassword,
+        password,
         companyName || null,
         companyAddress || null,
         companyPhone || null,
-      ]
+      ] // Removed bcrypt.hash
     );
 
     res.status(201).json({
