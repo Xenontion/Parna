@@ -113,12 +113,40 @@ app.get("/login", (req, res) => {
 });
 
 // Route for registration page
-app.get("/register_user", (req, res) => {
-  res.render("register_user");
+app.post("/register_user", async (req, res) => {
+  try {
+    const { type, login, email, password } = req.body;
+
+    const userCheck = await pool.query(
+      "SELECT * FROM users WHERE login = $1 OR email = $2",
+      [login, email]
+    );
+
+    if (userCheck.rows.length > 0) {
+      // ВАЖЛИВО: завжди повертаємо JSON!
+      return res
+        .status(400)
+        .json({ message: "Користувач з таким логіном або поштою вже існує" });
+    }
+
+    // Insert new user into database
+    const result = await pool.query(
+      "INSERT INTO users (type, login, email, password, company_name, company_address, company_phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
+      [type, login, email, password]
+    );
+
+    res.status(201).json({
+      message: "Користувача успішно зареєстровано",
+      userId: result.rows[0].id,
+    });
+  } catch (error) {
+    console.error("Error rendering registration page:", error);
+    res.status(500).send("Помилка при завантаженні сторінки реєстрації");
+  }
 });
 
 // API endpoint for user registration
-app.post("/api/register_user", async (req, res) => {
+app.post("/api/register_company", async (req, res) => {
   try {
     const {
       type,
