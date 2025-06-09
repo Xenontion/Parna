@@ -140,6 +140,7 @@ app.post("/register_user", async (req, res) => {
 app.post("/api/register_company", async (req, res) => {
   try {
     const {
+      id,
       type,
       login,
       email,
@@ -148,6 +149,20 @@ app.post("/api/register_company", async (req, res) => {
       companyAddress,
       companyPhone,
     } = req.body;
+
+    // Basic validation
+    if (
+      !id ||
+      !type ||
+      !login ||
+      !email ||
+      !password ||
+      !companyName ||
+      !companyAddress ||
+      !companyPhone
+    ) {
+      return res.status(400).json({ message: "Missing fields" });
+    }
 
     const userCheck = await pool.query(
       "SELECT * FROM users WHERE login = $1 OR email = $2",
@@ -161,16 +176,17 @@ app.post("/api/register_company", async (req, res) => {
     }
 
     const result = await pool.query(
-      "INSERT INTO users (type, login, email, password, company_name, company_address, company_phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
+      "INSERT INTO users (id, type, login, email, password, company_name, company_address, company_phone) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
       [
+        id,
         type,
         login,
         email,
         password,
-        companyName || null,
-        companyAddress || null,
-        companyPhone || null,
-      ] // Removed bcrypt.hash
+        companyName,
+        companyAddress,
+        companyPhone,
+      ]
     );
 
     res.status(201).json({
