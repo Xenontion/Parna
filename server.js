@@ -440,6 +440,42 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+app.post("/api/register_user", async (req, res) => {
+  try {
+    const { id, login, email, password, type } = req.body;
+
+    // Basic validation
+    if (!id || !login || !email || !password || !type) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing fields" });
+    }
+
+    const result = await pool.query(
+      `INSERT INTO users (id, login, email, password, type)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING *`,
+      [id, login, email, password, type]
+    );
+
+    res.status(200).json({ success: true, user: result.rows[0] });
+  } catch (err) {
+    console.error("Registration error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+app.get("/api/last-user-id", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT MAX(id) FROM users");
+    const lastId = result.rows[0].max || 0; // Default to 0 if no rows
+    res.status(200).json({ lastId: lastId });
+  } catch (err) {
+    console.error("Error fetching last ID:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 app.post("/api/register_product", async (req, res) => {
   const {
     name,
