@@ -612,6 +612,51 @@ app.get("/api/categories", async (req, res) => {
   }
 });
 
+app.post("/api/edit_product", async (req, res) => {
+  try {
+    const {
+      id,
+      name,
+      price,
+      quantity,
+      category,
+      bar_code,
+      manufacturer,
+      images,
+    } = req.body;
+
+    if (
+      !id ||
+      !name ||
+      !price ||
+      !quantity ||
+      !category ||
+      !bar_code ||
+      !manufacturer ||
+      !images
+    ) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const result = await pool.query(
+      `UPDATE products
+       SET name = $2, price = $3, quantity = $4, category = $5, bar_code = $6, manufacturer = $7, images = $8
+       WHERE id = $1
+       RETURNING *`,
+      [id, name, price, quantity, category, bar_code, manufacturer, images]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json({ success: true, product: result.rows[0] });
+  } catch (err) {
+    console.error("Edit product error:", err);
+    res.status(500).json({ message: "Server error during product edit" });
+  }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
