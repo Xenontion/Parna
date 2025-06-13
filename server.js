@@ -8,9 +8,7 @@ const app = express();
 
 const pool = new Pool({
   connectionString:
-    process.env.postgres ||
-    "postgres://admin:XnohULRYsFWBaw5YuF5RGePitZMDsmb2@dpg-d0hhhqruibrs739oijn0-a.oregon-postgres.render.com/National%20cashback",
-  ssl: { rejectUnauthorized: false },
+    "postgresql://postgres:spiderman124SYKA@db.plxdmzdkxksxywrzrrrc.supabase.co:5432/postgres"
 });
 
 app.set("views", path.join(__dirname, "/public/html"));
