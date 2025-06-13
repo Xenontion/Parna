@@ -1,8 +1,6 @@
 const express = require("express");
 const { Pool } = require("pg");
 const path = require("path");
-const env = require("dotenv");
-env.config(); // Load environment variables from .env file
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const e = require("express");
