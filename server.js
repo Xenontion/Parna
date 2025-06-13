@@ -1,14 +1,20 @@
 const express = require("express");
 const { Pool } = require("pg");
 const path = require("path");
+const env = require("dotenv");
+env.config(); // Load environment variables from .env file
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const e = require("express");
 
 const app = express();
 
 const pool = new Pool({
   connectionString:
-    "postgresql://postgres:spiderman124SYKA@db.plxdmzdkxksxywrzrrrc.supabase.co:5432/postgres"
+    env.parsed.DATABASE_URL || "postgres://user:password@localhost:5432/mydb",
+  ssl: {
+    rejectUnauthorized: false, // Set to true in production with valid SSL certificates
+  },
 });
 
 app.set("views", path.join(__dirname, "/public/html"));
